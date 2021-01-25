@@ -2,15 +2,28 @@ import React from "react";
 import "./login.less";
 import { Form, Input, Button, Checkbox } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-class Login extends React.Component {
-    
+import {reqLogin } from "../../api/index";
 
-    onFinish = (values) => {
-      console.log('Received values of form: ', values);
-    };
- 
+class Login extends React.Component {
+  formRef = React.createRef();
+  //pwdRef=React.createRef();
+  onFinish = (values) => {
+    console.log(this.value);
+    this.login(values['username'],values['password'])
+  };
+
+  login = async (username, password) => {
+    console.log('发送登陆的ajax 请求', username, password)
+    const result = await reqLogin(username, password)
+    console.log('login()', result)
+    }
+  
 
   render() {
+   
+
+    //const form=Form.form
+
     return (
       <div className="login">
         <header className="login-header">
@@ -23,6 +36,8 @@ class Login extends React.Component {
             className="login-form"
             initialValues={{ remember: true }}
             onFinish={this.onFinish}
+            ref={this.formRef}
+            
           >
             <Form.Item
               name="username"
@@ -37,9 +52,8 @@ class Login extends React.Component {
             </Form.Item>
             <Form.Item
               name="password"
-              rules={[
-                { required: true, message: "Please input your Password!" },
-              ]}
+              rules={[{ type: "string", min:8,max:14,pattern:/^[a-zA-Z0-9_]+$/,message:'密码不符合规范' }]}
+              hasFeedback
             >
               <Input
                 prefix={<LockOutlined className="site-form-item-icon" />}
@@ -73,7 +87,5 @@ class Login extends React.Component {
     );
   }
 }
-
-
 
 export default Login;

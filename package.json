@@ -20,7 +20,7 @@
     "react-scripts": "4.0.1",
     "web-vitals": "^0.2.4"
   },
-  "scripts": {
+   "scripts": {
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
