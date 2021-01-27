@@ -38,3 +38,7 @@ https://ant.design/docs/react/use-with-create-react-app-cn#%E9%AB%98%E7%BA%A7%E9
 <BrowserRouter>
 
 搭建login界面
+
+## 20210125
+
+密码正则表达式的校验，以及末尾相应图标的显示
