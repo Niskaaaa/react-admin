@@ -1,27 +1,37 @@
 import React from "react";
 import "./login.less";
-import { Form, Input, Button, Checkbox } from "antd";
+import { Form, Input, Button, Checkbox,message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import {reqLogin } from "../../api/index";
-
+import { reqLogin } from "../../api/index";
+import  memoryUtils from '../../utils/memoryUtils'
 class Login extends React.Component {
   formRef = React.createRef();
   //pwdRef=React.createRef();
   onFinish = (values) => {
     console.log(this.value);
-    this.login(values['username'],values['password'])
+    this.login(values["username"], values["password"]);
   };
 
   login = async (username, password) => {
-    console.log('发送登陆的ajax 请求', username, password)
-    const result = await reqLogin(username, password)
-    console.log('login()', result)
+    console.log("发送登陆的ajax 请求", username, password);
+    const result = await reqLogin(username, password);
+    console.log("login()", result);
+    if (result.status === 0) {
+      // 提示登录成功
+      message.success("登录成功", 2);
+      
+      // 保存用户登录信息
+      memoryUtils.user = result.data;
+      console.log("user",memoryUtils.user)
+      // 跳转到主页面
+      this.props.history.replace("/");
+    } else {
+      // 登录失败, 提示错误
+      message.error(result.msg);
     }
-  
+  };
 
   render() {
-   
-
     //const form=Form.form
 
     return (
@@ -37,7 +47,6 @@ class Login extends React.Component {
             initialValues={{ remember: true }}
             onFinish={this.onFinish}
             ref={this.formRef}
-            
           >
             <Form.Item
               name="username"
@@ -52,7 +61,15 @@ class Login extends React.Component {
             </Form.Item>
             <Form.Item
               name="password"
-              rules={[{ type: "string", min:8,max:14,pattern:/^[a-zA-Z0-9_]+$/,message:'密码不符合规范' }]}
+              rules={[
+                {
+                  type: "string",
+                  min: 4,
+                  max: 14,
+                  pattern: /^[a-zA-Z0-9_]+$/,
+                  message: "密码不符合规范",
+                },
+              ]}
               hasFeedback
             >
               <Input
