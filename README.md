@@ -42,3 +42,24 @@ https://ant.design/docs/react/use-with-create-react-app-cn#%E9%AB%98%E7%BA%A7%E9
 ## 20210125
 
 密码正则表达式的校验，以及末尾相应图标的显示
+
+ ## 20210202
+
+困扰了很久的问题，子组件是一个表单，但是提交按钮在父组件上，如何子组件向父组件传递参数。参考的是antd
+
+表单数据存储于上层组件
+
+https://ant.design/components/form-cn/#components-form-demo-global-state
+
+通过onchange 调用父组件中的函数 随时存在state里
+
+这个是一个钩子函数，fields是返回的状态，setFields是一个可以修改该状态的函数。在我的项目中并没有这样使用，而是存在state={ }中，然后另写一个set方法
+
+```jsx
+  const [fields, setFields] = useState([
+    {
+      name: ['username'],
+      value: 'Ant Design',
+    },
+  ]);
+```

@@ -1,6 +1,11 @@
 import React, { Component } from "react";
 import { Card, Table, Button, message, Modal } from "antd";
-import { StarOutlined, StarFilled, StarTwoTone } from '@ant-design/icons';
+import {
+  StarOutlined,
+  StarFilled,
+  StarTwoTone,
+  CodeSandboxCircleFilled,
+} from "@ant-design/icons";
 import UpdateForm from "./update-form";
 import AddForm from "./add-form";
 import LinkButton from "../../components/link-button";
@@ -16,6 +21,10 @@ export default class Category extends Component {
     parentName: "", // 父分类的名称
     loading: false, // 标识是否正在加载中
     showStatus: 0, // 是否显示对话框0: 都不显示, 1: 显示添加, 2: 显示更新
+    cate: "",
+    cateName: "",
+    name: ["username"],
+    value: "Ant Design",
   };
   /*
 根据parentId 异步获取分类列表显示
@@ -25,16 +34,17 @@ export default class Category extends Component {
     this.setState({
       loading: true,
     });
+    console.log("get");
     // 优先使用指定的parentId, 如果没有指定使用状态中的parentId
     parentId = parentId || this.state.parentId;
     // 异步获取分类列表
     const result = await reqCategorys(parentId); // {status: 0, data: []}
-    console.log('par',parentId)
+    console.log("par", parentId);
     // 更新loading 状态: 加载完成
     this.setState({
       loading: false,
     });
-    console.log(result)
+    console.log("res", result);
     if (result.status === 0) {
       const categorys = result.data;
       if (parentId === "0") {
@@ -42,7 +52,7 @@ export default class Category extends Component {
         this.setState({
           categorys,
         });
-        console.log('cate',categorys)
+        console.log("cate", categorys);
       } else {
         // 更新二级分类列表
         this.setState({
@@ -81,8 +91,7 @@ export default class Category extends Component {
       parentName: "",
       subCategorys: [],
       showStatus: 0,
-      form:{}
-
+      form: {},
     });
   };
   showAdd = () => {
@@ -106,24 +115,29 @@ export default class Category extends Component {
         */
   addCategory = async () => {
     // 得到数据
-   // const { parentId, categoryName } = this.form.getFieldsValue();
+    // const { parentId, categoryName } = this.form.getFieldsValue();
     // 关闭对话框
     this.setState({
       showStatus: 0,
     });
     // 重置表单
-   // this.form.resetFields();
+    // this.form.resetFields();
     // 异步请求添加分类
-    const result = await reqAddCategory(this.state.form.values['category'],this.state.form.values['categoryName']);
+    console.log("id", this.state.cate._id);
+    console.log(this.state.cateName);
+    const result = await reqAddCategory(
+      this.state.cate._id,
+      this.state.cateName
+    );
     if (result.status === 0) {
       /*
         添加一级分类
         在当前分类列表下添加
         */
-      if (this.form.state.values['categoryName'] === this.state.parentId) {
+      if (this.form.state.values["categoryName"] === this.state.parentId) {
         this.getCategorys();
-      } else if (this.state.form.values['categoryName'] === "0") {
-        this.getCategorys(this.state.form.values['categoryName']);
+      } else if (this.state.form.values["categoryName"] === "0") {
+        this.getCategorys(this.state.form.values["categoryName"]);
       }
     }
   };
@@ -146,6 +160,12 @@ export default class Category extends Component {
       // 重新获取列表
       this.getCategorys();
     }
+  };
+
+  handleVal = (cate, cateName) => {
+    console.log("cate", cate);
+    this.setState("cate", cate);
+    this.setState("cateName", cateName);
   };
   componentWillMount() {
     this.columns = [
@@ -172,6 +192,9 @@ export default class Category extends Component {
       },
     ];
   }
+  setFields(newFields) {
+    console.log(1,newFields);
+  }
   componentDidMount() {
     this.getCategorys();
   }
@@ -195,16 +218,14 @@ export default class Category extends Component {
       ) : (
         <span>
           <LinkButton onClick={this.showCategorys}>一级分类列表</LinkButton>{" "}
-          &nbsp;&nbsp;
-   
-          &nbsp;&nbsp;
+          &nbsp;&nbsp; &nbsp;&nbsp;
           <span>{parentName}</span>
         </span>
       );
     // Card 的右侧button
     const extra = (
       <Button type="primary" onClick={this.showAdd}>
-       添加
+        添加
       </Button>
     );
     return (
@@ -228,9 +249,11 @@ export default class Category extends Component {
           onCancel={() => this.setState({ showStatus: 0 })}
         >
           <AddForm
-            categorys={categorys}
-            parentId={parentId}
-            setForm={(form) => (this.form = form)}
+            fields={this.state.name}
+            onChange={(newFields) => {
+             console.log('new',newFields)
+             this.setState({name:newFields.value})
+            }}
           />
         </Modal>
         <Modal
