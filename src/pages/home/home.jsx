@@ -13,6 +13,7 @@ import User from "../user/user";
 import Bar from "../charts/bar";
 import Line from "../charts/line";
 import Pie from "../charts/pie";
+import './home.less'
 /*
 后台管理的路由组件
 */
@@ -25,8 +26,9 @@ export default class Admin extends Component {
       return <Redirect to="/login" />;
     }
     return (
-     <div>11</div>
-       
-    );
+      <div className="home">
+      欢迎使用硅谷后台管理系统
+      </div>
+      )
   }
 }

@@ -7,18 +7,20 @@ import {
   SettingOutlined,
   HomeOutlined,
 } from "@ant-design/icons";
-import { Link, withRouter } from "react-router-dom";
+import { Link, withRouter,Redirect } from "react-router-dom";
 import menuConfig from "../../config/menuConfig";
 const { SubMenu } = Menu;
 
 /*
 左侧导航组件
 */
-export default class LeftNav extends Component {
+
+class LeftNav extends Component {
   state = {
     theme: "dark",
     current: "1",
   };
+
   getMenuNodes = (menuList) => {
     // 得到当前请求的path
     const path = this.props.location.pathname;
@@ -55,10 +57,14 @@ export default class LeftNav extends Component {
     console.log("click ", e);
     this.setState({
       current: e.key,
+      
     });
+   
+    //this.props.location.pathname=e.key
   };
 
   render() {
+
     return (
       <div className="left-nav">
         <Link to="/home" className="logo-link">
@@ -77,19 +83,22 @@ export default class LeftNav extends Component {
 
         
           <SubMenu key="/products" icon={<MailOutlined />} title="商品">
-            <Menu.Item key="/category">品类管理</Menu.Item>
-            <Menu.Item key="/product">商品管理</Menu.Item>{" "}
+            <Menu.Item key="/category"><Link to={'/category'}>品类管理</Link></Menu.Item>
+            <Menu.Item key="/product"><Link to={'/product'}>商品管理</Link></Menu.Item>{" "}
           </SubMenu>
-          <Menu.Item key="/user">用户管理</Menu.Item>
-          <Menu.Item key="4">角色管理</Menu.Item>
+          <Menu.Item key="/user"><Link to={'/user'}>用户管理</Link></Menu.Item>
+          <Menu.Item key="/role"><Link to={'/role'}>角色管理</Link></Menu.Item>
 
           <SubMenu key="/charts" icon={<AppstoreOutlined />} title="图形图表">
-            <Menu.Item key="/charts/bar">柱形图</Menu.Item>
-            <Menu.Item key="/charts/line">折线图</Menu.Item>
-            <Menu.Item key="/charts/pie">饼图</Menu.Item>
+            <Menu.Item key="/charts/bar"><Link to={'/charts/bar'}>柱形图</Link></Menu.Item>
+            <Menu.Item key="/charts/line"><Link to={'/charts/line'}>折线图</Link></Menu.Item>
+            <Menu.Item key="/charts/pie"><Link to={'/charts/pie'}>饼图</Link></Menu.Item>
           </SubMenu>
         </Menu>
       </div>
     );
   }
 }
+
+
+export default withRouter(LeftNav)

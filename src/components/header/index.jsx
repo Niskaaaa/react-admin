@@ -20,13 +20,6 @@ class Header extends Component {
   /*
 发异步ajax 获取天气数据并更新状态
 */
-  getWeather = async () => {
-    const { dayPictureUrl, weather } = await reqWeather("北京");
-    this.setState({
-      dayPictureUrl,
-      weather,
-    });
-  };
 
   getSysTime = () => {
     this.intervalId = setInterval(() => {
@@ -34,6 +27,31 @@ class Header extends Component {
         sysTime: formateDate(Date.now()),
       });
     }, 1000);
+  };
+
+  getTitle = () => {
+    // 得到当前请求路径
+    const path = this.props.location.pathname;
+    let title;
+    console.log(menuList)
+    Array.from(menuList).forEach((item) => {
+      if (item.key === path) {
+        // 如果当前item 对象的key 与path 一样,item 的title 就是需要
+
+        title = item.title;
+      } else if (item.children) {
+        // 在所有子item 中查找匹配的
+        const cItem = item.children.find(
+          (cItem) => path.indexOf(cItem.key) === 0
+        );
+        // 如果有值才说明有匹配的
+        if (cItem) {
+          // 取出它的title
+          title = cItem.title;
+        }
+      }
+    });
+    return title;
   };
   /*
       退出登陆
@@ -60,7 +78,7 @@ class Header extends Component {
 
   componentDidMount() {
     this.getSysTime();
-    this.getWeather();
+
   }
   componentWillUnmount() {
     // 清除定时器
@@ -74,6 +92,7 @@ class Header extends Component {
     const path = this.props.location.pathname;
     // 得到对应的标题
     const title = this.getTitle(path);
+
     return (
       <div className="header">
         <div className="header-top">
@@ -84,8 +103,7 @@ class Header extends Component {
           <div className="header-bottom-left">{title}</div>
           <div className="header-bottom-right">
             <span>{sysTime}</span>
-            <img src={dayPictureUrl} alt="weather" />
-            <span>{weather}</span>
+  
           </div>
         </div>
       </div>
