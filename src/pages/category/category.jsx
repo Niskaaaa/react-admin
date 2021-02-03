@@ -23,8 +23,6 @@ export default class Category extends Component {
     showStatus: 0, // 是否显示对话框0: 都不显示, 1: 显示添加, 2: 显示更新
     cate: "",
     cateName: "",
-    name: ["username"],
-    value: "Ant Design",
   };
   /*
 根据parentId 异步获取分类列表显示
@@ -103,6 +101,7 @@ export default class Category extends Component {
         显示修改的对话框
         */
   showUpdate = (category) => {
+    console.log('this',category)
     // 保存category
     this.category = category;
     // 更新状态
@@ -123,10 +122,10 @@ export default class Category extends Component {
     // 重置表单
     // this.form.resetFields();
     // 异步请求添加分类
-    console.log("id", this.state.cate._id);
+    console.log("id", this.state.cate);
     console.log(this.state.cateName);
     const result = await reqAddCategory(
-      this.state.cate._id,
+      this.state.cate,
       this.state.cateName
     );
     if (result.status === 0) {
@@ -134,10 +133,8 @@ export default class Category extends Component {
         添加一级分类
         在当前分类列表下添加
         */
-      if (this.form.state.values["categoryName"] === this.state.parentId) {
+      if ( this.state.cate === this.state.parentId) {
         this.getCategorys();
-      } else if (this.state.form.values["categoryName"] === "0") {
-        this.getCategorys(this.state.form.values["categoryName"]);
       }
     }
   };
@@ -146,27 +143,24 @@ export default class Category extends Component {
 */
   updateCategory = async () => {
     // 得到数据
-    const categoryId = this.category._id;
-    const { categoryName } = this.form.getFieldsValue();
+    const categoryId = this.state.cate._id;
+    const categoryName  = this.state.cateName;
     // 关闭对话框
     this.setState({
       showStatus: 0,
     });
+    console.log('id',this.state.cate._id)
     // 重置表单
-    this.form.resetFields();
+ //   this.form.resetFields();
     // 异步请求更新分类
     const result = await reqUpdateCategory({ categoryId, categoryName });
     if (result.status === 0) {
+ //     this.setState({ cate: "",cateName:"" });
       // 重新获取列表
       this.getCategorys();
     }
   };
 
-  handleVal = (cate, cateName) => {
-    console.log("cate", cate);
-    this.setState("cate", cate);
-    this.setState("cateName", cateName);
-  };
   componentWillMount() {
     this.columns = [
       {
@@ -249,10 +243,13 @@ export default class Category extends Component {
           onCancel={() => this.setState({ showStatus: 0 })}
         >
           <AddForm
+          categorys={this.state.categorys}
+        
+            parentId={this.state.parentId}
             fields={this.state.name}
             onChange={(newFields) => {
-             console.log('new',newFields)
-             this.setState({name:newFields.value})
+             console.log('new',newFields[0].value)
+             this.setState({cate:newFields[0].value,cateName:newFields[1].value})
             }}
           />
         </Modal>
@@ -262,12 +259,20 @@ export default class Category extends Component {
           onOk={this.updateCategory}
           onCancel={() => {
             this.setState({ showStatus: 0 });
-            this.form.resetFields();
+           // this.form.resetFields();
           }}
+
+ 
         >
           <UpdateForm
-            categoryName={category.name}
-            setForm={(form) => (this.form = form)}
+          //  categoryName={category.name}
+            category={this._id}
+            //setForm={(form) => (this.form = form)}         
+            
+            onChange={(newFields) => {
+            console.log('new',newFields[0].value)
+            this.setState({cate:category,cateName:newFields[0].value})
+           }}
           />
         </Modal>
       </Card>
