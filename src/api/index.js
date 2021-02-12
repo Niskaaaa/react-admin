@@ -87,3 +87,10 @@ export const reqUpdateProductStatus = (productId, status) =>
 // 删除图片
 export const reqDeleteImg = (name) =>
   ajax("/manage/img/delete", { name }, "post");
+
+export const reqAddOrUpdateUser = (user) => ajax('/manage/user/'+(user._id ? 'update' :
+'add'), user, 'POST')
+// 获取用户列表
+export const reqUsers = () => ajax('/manage/user/list')
+// 删除用户
+export const reqDeleteUser = (userId) => ajax('/manage/user/delete', {userId}, 'POST')

@@ -1,33 +1,21 @@
 import React, { Component } from "react";
-import { Redirect,Route,Switch} from "react-router-dom";
-import { Layout } from "antd";
-import memeoryUtils from "../../utils/memoryUtils";
-import Header from "../../components/header";
-import LeftNav from "../../components/left-nav";
-
-import Home from "../home/home";
-import Category from "../category/category";
-import Product from "../product/product";
-import Role from "../role/role";
-import User from "../user/user";
-import Bar from "../charts/bar";
-import Line from "../charts/line";
-import Pie from "../charts/pie";
+import { Switch, Route, Redirect } from "react-router-dom";
+import ProductHome from "./home";
+import ProductAddUpdate from "./add-update";
+import ProductDetail from "./detail";
+import "./product.less";
 /*
-后台管理的路由组件
+管理的商品管理路由组件
 */
-const { Footer, Sider, Content } = Layout;
-export default class Admin extends Component {
+export default class Product extends Component {
   render() {
-    const user = memeoryUtils.user;
-    console.log(user);
-    if (!user) {
-      return <Redirect to="/login" />;
-    }
     return (
-      <div className="home">
-      产品
-      </div>
-      )
+      <Switch>
+        <Route path="/product" exact component={ProductHome} />
+        <Route path="/product/addupdate" component={ProductAddUpdate} />
+        <Route path="/product/detail" component={ProductDetail} />
+        <Redirect to="/product" />
+      </Switch>
+    );
   }
 }

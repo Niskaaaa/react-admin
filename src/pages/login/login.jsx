@@ -8,7 +8,7 @@ class Login extends React.Component {
   formRef = React.createRef();
   //pwdRef=React.createRef();
   onFinish = (values) => {
-    console.log(this.value);
+    console.log('v',values);
     this.login(values["username"], values["password"]);
   };
 

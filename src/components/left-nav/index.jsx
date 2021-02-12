@@ -78,6 +78,7 @@ class LeftNav extends Component {
           mode="inline"
         >
           <Menu.Item key="/home" icon={<HomeOutlined />}>
+          <Link to={'/home'}></Link>
             首页
           </Menu.Item>
 

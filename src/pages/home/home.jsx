@@ -1,11 +1,10 @@
 import React, { Component } from "react";
-import { Redirect,Route,Switch} from "react-router-dom";
-import { Layout } from "antd";
+import { Redirect, Route, Switch } from "react-router-dom";
+import { Layout, Card, Statistic, DatePicker, Timeline } from "antd";
 import memeoryUtils from "../../utils/memoryUtils";
 import Header from "../../components/header";
 import LeftNav from "../../components/left-nav";
 
-import Home from "../home/home";
 import Category from "../category/category";
 import Product from "../product/product";
 import Role from "../role/role";
@@ -13,22 +12,118 @@ import User from "../user/user";
 import Bar from "../charts/bar";
 import Line from "../charts/line";
 import Pie from "../charts/pie";
-import './home.less'
+import "./home.less";
 /*
 后台管理的路由组件
 */
-const { Footer, Sider, Content } = Layout;
-export default class Admin extends Component {
+
+const dateFormat = "YYYY/MM/DD";
+const { RangePicker } = DatePicker;
+export default class Home extends Component {
+  state = {
+    isVisited: true,
+  };
+  handleChange = (isVisited) => {
+    return () => this.setState({ isVisited });
+  };
   render() {
-    const user = memeoryUtils.user;
-    console.log(user);
-    if (!user) {
-      return <Redirect to="/login" />;
-    }
+    const { isVisited } = this.state;
     return (
       <div className="home">
-      欢迎使用硅谷后台管理系统
+        <Card
+          className="home-card"
+          title="商品总量"
+   
+          style={{ width: 250 }}
+          headStyle={{ color: "rgba(0,0,0,.45)" }}
+        >
+          <Statistic
+            value={1128163}
+            suffix="个"
+            style={{ fontWeight: "bolder" }}
+          />
+          <Statistic
+            value={15}
+            valueStyle={{ fontSize: 15 }}
+            prefix={"周同比"}
+            suffix={
+              <div>
+                %
+               
+              </div>
+            }
+          />
+          <Statistic
+            value={10}
+            valueStyle={{ fontSize: 15 }}
+            prefix={"日同比"}
+            suffix={
+              <div>
+                %
+              
+              </div>
+            }
+          />
+        </Card>
+        <Line />
+        <Card
+          className="home-content"
+          title={
+            <div className="home-menu">
+              <span
+                className={
+                  isVisited
+                    ? "home-menu-active home-menu-visited"
+                    : "home-menu-visited"
+                }
+                onClick={this.handleChange(true)}
+              >
+                访问量
+              </span>
+              <span
+                className={isVisited ? "" : "home-menu-active"}
+                onClick={this.handleChange(false)}
+              >
+                销售量
+              </span>
+            </div>
+          }
+          extra={
+            <RangePicker
+              
+              format={dateFormat}
+            />
+          }
+        >
+          <Card
+            className="home-table-left"
+            title={isVisited ? "访问趋势" : "销售趋势"}
+            bodyStyle={{ padding: 0, height: 275 }}
+           
+          >
+            <Bar />
+          </Card>
+          <Card
+            title="任务"
+          
+            className="home-table-right"
+          >
+            <Timeline>
+              <Timeline.Item color="green">新版本迭代会</Timeline.Item>
+              <Timeline.Item color="green">完成网站设计初版</Timeline.Item>
+              <Timeline.Item color="red">
+                <p>联调接口</p>
+                <p>功能验收</p>
+              </Timeline.Item>
+              <Timeline.Item>
+                <p>登录功能设计</p>
+                <p>权限验证</p>
+                <p>页面排版</p>
+              </Timeline.Item>
+            </Timeline>
+          </Card>
+        </Card>
       </div>
-      )
+    );
   }
 }
